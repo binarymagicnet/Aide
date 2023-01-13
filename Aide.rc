@@ -1,0 +1,15 @@
+#include <windows.h>
+#include "raedit.h"
+
+IDI_ICON ICON DISCARDABLE "resource/demo.ico"
+IDB_RAEDITBUTTON BITMAP DISCARDABLE "resource/Button.bmp"
+IDC_HSPLITTCUR CURSOR DISCARDABLE "resource/SplitH.cur"
+IDB_BOOKMARK BITMAP DISCARDABLE "resource/Bookmark.bmp"
+IDC_SELECTCUR CURSOR DISCARDABLE "resource/Select.cur"
+IDB_LINENUMBER BITMAP DISCARDABLE "resource/Linenumber.bmp"
+IDB_EXPAND BITMAP DISCARDABLE "resource/Expand.bmp"
+IDB_COLLAPSE BITMAP DISCARDABLE "resource/Collapse.bmp"
+IDB_LOCK BITMAP DISCARDABLE "resource/Lock.bmp"
+RC_KEYWORDS RCDATA DISCARDABLE "resource/keywords.txt"
+RC_WINAPI RCDATA DISCARDABLE "resource/winapi.txt"
+
