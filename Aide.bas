@@ -63,7 +63,7 @@ END ENUM
     BCX_SET_FONT(ghMainTab, "Verdana", 9)
 
     ghEdit[0] =  BCX_CONTROL("RAEdit", ghTab[0], "This is Page ", 6000, rc.left,rc.top,rc.right-rc.left-8,rc.bottom-rc.top-46, _
-      WS_CHILD OR WS_VISIBLE OR WS_BORDER OR ES_LEFT OR ES_MULTILINE OR STYLE_AUTOSIZELINENUM OR STYLE_NOLINENUMBER OR STYLE_DRAGDROP)
+      WS_CHILD OR WS_VISIBLE OR WS_BORDER OR ES_LEFT OR ES_MULTILINE OR STYLE_AUTOSIZELINENUM OR STYLE_NOLINENUMBER OR STYLE_DRAGDROP OR STYLE_NOSIZEGRIP)
 
     RaConfigEditor(ghEdit[0])
 
@@ -200,7 +200,7 @@ BEGIN EVENTS
             AdjustWindowRect (&rc, 0, 0)
             FOR INTEGER i = 0 to sizeof(ghEdit)/sizeof(ghEdit[0])
                 IF ghEdit[i] THEN
-                    SetWindowPos(ghEdit[i], NULL, rc.left, rc.top+2, (rc.right - rc.left)-8, (rc.bottom - rc.top)-24, SWP_NOZORDER OR SWP_NOMOVE )
+                    SetWindowPos(ghEdit[i], NULL, rc.left, rc.top+2, (rc.right - rc.left)-8, (rc.bottom - rc.top)-26, SWP_NOZORDER OR SWP_NOMOVE )
                 END IF
             NEXT
             
