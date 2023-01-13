@@ -69,7 +69,7 @@ END ENUM
 
     SetupMenu(ghMainFrm)
 
-    ghStatus = BCX_STATUS("Ready", ghMainFrm)
+    ghStatus = BCX_STATUS("Line: 1, Column: 1", ghMainFrm)
 
     'Generate a WM_SIZE message
     MoveWindow(ghMainFrm, 0, 0, fWidth, fHeight, TRUE) 'Force a WM_SIZE
