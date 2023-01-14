@@ -49,6 +49,8 @@ SUB RaConfigEditor(hEDT as HWND)
 
     SendMessage(hEDT, REM_SETSTYLEEX, STILEEX_STRINGMODEFB, 0)
 
+    SendMessage(hEDT, REM_SETSTYLEEX, STILEEX_LINECHANGED, 0)
+
     ' Set Colors and Keywords
     RaSetColors(hEDT)
     RaLoadKeyWords(hEDT)
@@ -134,13 +136,18 @@ FUNCTION RaLoadFile(edt AS HWND) AS STRING
     DIM AS CHARRANGE chrg
     RetStr$ = GetFileName$("Open File...", "BCX Files|*.BAS;*.INC;*.bi;*.bci")
     IF Len(RetStr$) THEN
+
+
         EDITLOADFILE(edt, RetStr$)
         chrg.cpMin = 0
         chrg.cpMax = 0
         SendMessage(edt, EM_EXSETSEL, 0, &chrg)
         SendMessage(edt, EM_SCROLLCARET, 0, 0)
         SendMessage(edt, REM_HILITEACTIVELINE, 0, 2)
+        SendMessage(edt, EM_SETMODIFY, FALSE, 0)
+        SendMessage(edt, REM_SETCHANGEDSTATE, FALSE, 0)
         SetFocus(edt)
+        
     END IF
     FUNCTION = RetStr$
 END FUNCTION
