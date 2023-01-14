@@ -158,7 +158,7 @@ SUB RaSaveFile(hEDT as HWND)
     eSIZE = GetWindowTextLength(hEDT)
     DIM eTEXT$*eSIZE+1
 
-    tabName$ = GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
+    tabName$ = RaGetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
 
     IF tabName$ = "New.bas" THEN
         fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
@@ -171,13 +171,36 @@ SUB RaSaveFile(hEDT as HWND)
         OPEN fNAME$ FOR BINARY NEW AS FP1
         PUT$ FP1, eTEXT$, LEN(eTEXT$)
         CLOSE FP1
-        SetTabLabelText(fNAME$, RaGetTab())
+        RaSetTabLabelText(fNAME$, RaGetTab())
     END IF
 END SUB
 
 FUNCTION RaGetTab() AS INTEGER
     FUNCTION = TabCtrl_GetCurSel(ghMainTab)
 END FUNCTION
+
+FUNCTION RaGetTabLabelText$(index AS INTEGER)
+    DIM AS TCITEM tabItem
+    DIM tabLabel$
+
+    tabItem.mask = TCIF_TEXT
+    tabItem.pszText = tabLabel
+    tabItem.cchTextMax = sizeof(tabLabel)
+
+    TabCtrl_GetItem(ghMainTab, index, &tabItem)
+    
+    FUNCTION =  TRIM$(tabLabel)
+END FUNCTION
+
+SUB RaSetTabLabelText(fname$, index AS INTEGER)
+    DIM AS TCITEM tabItem
+
+    tabItem.mask=TCIF_TEXT
+    tabItem.pszText = BCXSPLITPATH$(fname$,FNAME OR FEXT)
+    tabItem.cchTextMax = BCXSTRSIZE
+
+    TabCtrl_SetItem(ghMainTab, index, &tabItem)
+END SUB
 
 SUB RaGotoLine(hEDT as HWND, Line AS INTEGER)
     Dim chrg As CHARRANGE

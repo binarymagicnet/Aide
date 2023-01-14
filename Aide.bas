@@ -113,28 +113,7 @@ SUB SetupMenu(parent as HWND)
 
 END SUB
 
-FUNCTION GetTabLabelText$(index AS INTEGER)
-    DIM AS TCITEM tabItem
-    DIM tabLabel$
 
-    tabItem.mask = TCIF_TEXT
-    tabItem.pszText = tabLabel
-    tabItem.cchTextMax = sizeof(tabLabel)
-
-    TabCtrl_GetItem(ghMainTab, index, &tabItem)
-    
-    FUNCTION =  TRIM$(tabLabel)
-END FUNCTION
-
-SUB SetTabLabelText(fname$, index AS INTEGER)
-    DIM AS TCITEM tabItem
-
-    tabItem.mask=TCIF_TEXT
-    tabItem.pszText = BCXSPLITPATH$(fname$,FNAME OR FEXT)
-    tabItem.cchTextMax = BCXSTRSIZE
-
-    TabCtrl_SetItem(ghMainTab, index, &tabItem)
-END SUB
 
 
   '================================================================
@@ -143,20 +122,20 @@ BEGIN EVENTS
     SELECT CASE CBMSG
    
         CASE WM_SHOWWINDOW
-            SetTabLabelText("New.bas",0)
+            RaSetTabLabelText("New.bas",0)
         CASE WM_COMMAND
                 SELECT CASE CBCTL
                     CASE mnuOpen
                         dim fname$
 
-                        IF TRIM$(GetTabLabelText(RaGetTab())) <> "New.bas" THEN
+                        IF TRIM$(RaGetTabLabelText(RaGetTab())) <> "New.bas" THEN
                             RaNewEdit()
                         END IF
 
                         fname$ = RaLoadFile(ghEdit[RaGetTab()])
 
                         IF LEN(fname$) THEN
-                            SetTabLabelText(fname$, RaGetTab())
+                            RaSetTabLabelText(fname$, RaGetTab())
                         END IF
 
                     CASE mnuSave
