@@ -135,6 +135,26 @@ SUB SetTabLabelText(fname$, index AS INTEGER)
 
     TabCtrl_SetItem(ghMainTab, index, &tabItem)
 END SUB
+
+SUB RaSaveFile(hEDT as HWND)
+    DIM eSIZE, fNAME$, tabName$
+
+    eSIZE = GetWindowTextLength(hEDT)
+    DIM eTEXT$*eSIZE+1
+
+    tabName$ = GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
+    ' msgbox(tabName)
+
+    fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
+    IF *fNAME$ THEN
+        eTEXT$ = BCX_GET_TEXT$(hEDT)
+        OPEN fNAME$ FOR OUTPUT AS FP1
+        PUT$ FP1, eTEXT$, LEN(eTEXT$)
+        CLOSE FP1
+    END IF
+
+
+END SUB
   '================================================================
   
 BEGIN EVENTS
@@ -157,7 +177,10 @@ BEGIN EVENTS
                         IF *fname$ THEN
                             SetTabLabelText(fname$, TabCtrl_GetCurSel(ghMainTab))
                         END IF
-                        
+
+                    CASE mnuSave
+                        RaSaveFile(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+
                     CASE mnuNew
                         RaNewEdit()
 
