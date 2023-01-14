@@ -144,7 +144,12 @@ SUB RaSaveFile(hEDT as HWND)
 
     tabName$ = GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
 
-    fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
+    IF tabName$ = "New.bas" THEN
+        fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
+    ELSE
+        fNAME$ = tabName$
+    END IF
+    
     IF *fNAME$ THEN
         eTEXT$ = BCX_GET_TEXT$(hEDT)
         OPEN fNAME$ FOR OUTPUT AS FP1
