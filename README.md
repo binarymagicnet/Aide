@@ -10,4 +10,6 @@ To build, first open the `_build.cmd` file and modify the two variables with the
 
 Then simply execute the script to build.
 
+Screen shot:
 
+![](img/Capture.PNG)
