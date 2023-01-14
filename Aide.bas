@@ -149,12 +149,13 @@ SUB RaSaveFile(hEDT as HWND)
     ELSE
         fNAME$ = tabName$
     END IF
-    
-    IF *fNAME$ THEN
+
+    IF LEN(fNAME$) THEN
         eTEXT$ = BCX_GET_TEXT$(hEDT)
-        OPEN fNAME$ FOR OUTPUT AS FP1
+        OPEN fNAME$ FOR BINARY NEW AS FP1
         PUT$ FP1, eTEXT$, LEN(eTEXT$)
         CLOSE FP1
+        SetTabLabelText(fNAME$, TabCtrl_GetCurSel(ghMainTab))
     END IF
 
 
@@ -177,7 +178,7 @@ BEGIN EVENTS
 
                         fname$ = RaLoadFile(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
 
-                        IF *fname$ THEN
+                        IF LEN(fname$) THEN
                             SetTabLabelText(fname$, TabCtrl_GetCurSel(ghMainTab))
                         END IF
 
