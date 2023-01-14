@@ -7,5 +7,3 @@ It uses the [64-bit C port of RaEdit](https://github.com/m417z/RAEditC), and is 
 It requires [PellesC](http://www.smorgasbordet.com/pellesc/) as the backend C compiler.
 
 To build, open the `_build.cmd` file and modify the two variables with the path to the PellesC folder and the folder containing the `bc.exe` file.
-
-
