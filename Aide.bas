@@ -136,30 +136,7 @@ SUB SetTabLabelText(fname$, index AS INTEGER)
     TabCtrl_SetItem(ghMainTab, index, &tabItem)
 END SUB
 
-SUB RaSaveFile(hEDT as HWND)
-    DIM eSIZE, fNAME$, tabName$
 
-    eSIZE = GetWindowTextLength(hEDT)
-    DIM eTEXT$*eSIZE+1
-
-    tabName$ = GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
-
-    IF tabName$ = "New.bas" THEN
-        fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
-    ELSE
-        fNAME$ = tabName$
-    END IF
-
-    IF LEN(fNAME$) THEN
-        eTEXT$ = BCX_GET_TEXT$(hEDT)
-        OPEN fNAME$ FOR BINARY NEW AS FP1
-        PUT$ FP1, eTEXT$, LEN(eTEXT$)
-        CLOSE FP1
-        SetTabLabelText(fNAME$, TabCtrl_GetCurSel(ghMainTab))
-    END IF
-
-
-END SUB
   '================================================================
   
 BEGIN EVENTS
@@ -172,39 +149,39 @@ BEGIN EVENTS
                     CASE mnuOpen
                         dim fname$
 
-                        IF TRIM$(GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))) <> "New.bas" THEN
+                        IF TRIM$(GetTabLabelText(RaGetTab())) <> "New.bas" THEN
                             RaNewEdit()
                         END IF
 
-                        fname$ = RaLoadFile(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        fname$ = RaLoadFile(ghEdit[RaGetTab()])
 
                         IF LEN(fname$) THEN
-                            SetTabLabelText(fname$, TabCtrl_GetCurSel(ghMainTab))
+                            SetTabLabelText(fname$, RaGetTab())
                         END IF
 
                     CASE mnuSave
-                        RaSaveFile(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaSaveFile(ghEdit[RaGetTab()])
 
                     CASE mnuNew
                         RaNewEdit()
 
                     CASE mnuCut
-                        RaCut(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaCut(ghEdit[RaGetTab()])
 
                     CASE mnuCopy
-                        RaCopy(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaCopy(ghEdit[RaGetTab()])
 
                     CASE mnuPaste
-                        RaPaste(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaPaste(ghEdit[RaGetTab()])
 
                     CASE mnuSELECTALL
-                        RaSelectAll(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaSelectAll(ghEdit[RaGetTab()])
 
                     CASE mnuUNDO
-                        RaUndo(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaUndo(ghEdit[RaGetTab()])
 
                     CASE mnuREDO
-                        RaRedo(ghEdit[TabCtrl_GetCurSel(ghMainTab)])
+                        RaRedo(ghEdit[RaGetTab()])
 
                     CASE mnuEXIT
                         PostMessage(hWnd, WM_CLOSE, 0, 0)
@@ -244,12 +221,12 @@ BEGIN EVENTS
             IF LPNMHDR->code >= TCN_LAST && LPNMHDR->code <= TCN_FIRST THEN
                 SELECT CASE LPNMHDR->code
                     CASE TCN_SELCHANGE
-                        PageNo = TabCtrl_GetCurSel(ghMainTab)
+                        PageNo = RaGetTab()
                         SetFocus(ghEdit[PageNo])
                 END SELECT
             END IF
 
-            IF LPNMHDR->hwndFrom = ghEdit[TabCtrl_GetCurSel(ghMainTab)] THEN
+            IF LPNMHDR->hwndFrom = ghEdit[RaGetTab()] THEN
 
                 IF LPNMHDR->code = EN_SELCHANGE THEN
                     ' Update statusbar
@@ -259,20 +236,20 @@ BEGIN EVENTS
 
                 IF lpRASELCHANGE->seltyp = SEL_OBJECT THEN
                     ' Bookmark clicked
-                    bm=SendMessage(ghEdit[TabCtrl_GetCurSel(ghMainTab)],REM_GETBOOKMARK, lpRASELCHANGE->line,0)
+                    bm=SendMessage(ghEdit[RaGetTab()],REM_GETBOOKMARK, lpRASELCHANGE->line,0)
                     SELECT CASE bm
                         CASE 1
                             ' Collapse
-                            SendMessage(ghEdit[TabCtrl_GetCurSel(ghMainTab)],REM_COLLAPSE, lpRASELCHANGE->line,0)     
+                            SendMessage(ghEdit[RaGetTab()],REM_COLLAPSE, lpRASELCHANGE->line,0)     
                         CASE 2
                             ' Expand
-                            SendMessage(ghEdit[TabCtrl_GetCurSel(ghMainTab)],REM_EXPAND, lpRASELCHANGE->line,0)
+                            SendMessage(ghEdit[RaGetTab()],REM_EXPAND, lpRASELCHANGE->line,0)
                     END SELECT
                 ELSE
                     ' Selection changed
                     IF lpRASELCHANGE->fchanged THEN
                         ' Update block bookmarks
-                        SendMessage(ghEdit[TabCtrl_GetCurSel(ghMainTab)],REM_SETBLOCKS,0,0)
+                        SendMessage(ghEdit[RaGetTab()],REM_SETBLOCKS,0,0)
                     END IF
                 END IF
             END IF
@@ -289,7 +266,7 @@ BEGIN EVENTS
 
         Case WM_CONTEXTMENU
             DIM AS POINT pt
-            If wParam=(WPARAM)ghTab[TabCtrl_GetCurSel(ghMainTab)] Then
+            If wParam=(WPARAM)ghTab[RaGetTab()] Then
                 pt.x = LOWORD(lParam)
                 pt.y = HIWORD(lParam)
                 TrackPopupMenu( GetSubMenu( GetMenu(hWnd), 1 ), TPM_LEFTALIGN or TPM_RIGHTBUTTON, pt.x, pt.y, 0, hWnd, 0 )

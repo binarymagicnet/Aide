@@ -152,6 +152,33 @@ FUNCTION RaLoadFile(edt AS HWND) AS STRING
     FUNCTION = RetStr$
 END FUNCTION
 
+SUB RaSaveFile(hEDT as HWND)
+    DIM eSIZE, fNAME$, tabName$
+
+    eSIZE = GetWindowTextLength(hEDT)
+    DIM eTEXT$*eSIZE+1
+
+    tabName$ = GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
+
+    IF tabName$ = "New.bas" THEN
+        fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
+    ELSE
+        fNAME$ = tabName$
+    END IF
+
+    IF LEN(fNAME$) THEN
+        eTEXT$ = BCX_GET_TEXT$(hEDT)
+        OPEN fNAME$ FOR BINARY NEW AS FP1
+        PUT$ FP1, eTEXT$, LEN(eTEXT$)
+        CLOSE FP1
+        SetTabLabelText(fNAME$, RaGetTab())
+    END IF
+END SUB
+
+FUNCTION RaGetTab() AS INTEGER
+    FUNCTION = TabCtrl_GetCurSel(ghMainTab)
+END FUNCTION
+
 SUB RaGotoLine(hEDT as HWND, Line AS INTEGER)
     Dim chrg As CHARRANGE
     DIM GotoLine
