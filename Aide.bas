@@ -62,7 +62,7 @@ END ENUM
     ghMainTab = BCX_TAB(ghMainFrm, ID_TAB, 1, ghTab, gTabPage$, 0, 0, fWidth, fHeight-26,NULL)
     BCX_SET_FONT(ghMainTab, "Verdana", 9)
 
-    ghEdit[0] =  BCX_CONTROL("RAEdit", ghTab[0], "This is Page ", 6000, rc.left,rc.top,rc.right-rc.left-8,rc.bottom-rc.top-46, _
+    ghEdit[0] =  BCX_CONTROL("RAEdit", ghTab[0], "", 6000, rc.left,rc.top,rc.right-rc.left-8,rc.bottom-rc.top-46, _
       WS_CHILD OR WS_VISIBLE OR WS_BORDER OR ES_LEFT OR ES_MULTILINE OR STYLE_AUTOSIZELINENUM OR STYLE_NOLINENUMBER OR STYLE_DRAGDROP OR STYLE_NOSIZEGRIP)
 
     RaConfigEditor(ghEdit[0])
@@ -143,7 +143,6 @@ SUB RaSaveFile(hEDT as HWND)
     DIM eTEXT$*eSIZE+1
 
     tabName$ = GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))
-    ' msgbox(tabName)
 
     fNAME$ = GETFILENAME$("Save","BCX Files|*.BAS;*.INC;*.bi;*.bci",1,ghMainFrm,0,0,tabName$,0)
     IF *fNAME$ THEN
@@ -161,14 +160,13 @@ BEGIN EVENTS
     SELECT CASE CBMSG
    
         CASE WM_SHOWWINDOW
-        '   RaNewEdit()
-
+            SetTabLabelText("New.bas",0)
         CASE WM_COMMAND
                 SELECT CASE CBCTL
                     CASE mnuOpen
                         dim fname$
 
-                        IF TRIM$(GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))) <> "<Untitled.bas>" THEN
+                        IF TRIM$(GetTabLabelText(TabCtrl_GetCurSel(ghMainTab))) <> "New.bas" THEN
                             RaNewEdit()
                         END IF
 

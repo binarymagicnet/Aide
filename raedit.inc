@@ -12,7 +12,7 @@ SUB RaNewEdit()
     AdjustWindowRect (&rc, 0, 0)
 
     IF pn THEN
-      BCX_ADDTAB(ghMainTab, pn, "<Untitled.bas>")
+      BCX_ADDTAB(ghMainTab, pn, "New.bas")
       ghEdit[pn] =  BCX_CONTROL("RAEdit", ghTab[pn], "This is Page ", pn+6000, rc.left,rc.top,rc.right-rc.left-8,rc.bottom-rc.top-26, _
         WS_CHILD OR WS_VISIBLE OR WS_BORDER OR ES_LEFT OR ES_MULTILINE OR STYLE_AUTOSIZELINENUM OR STYLE_NOLINENUMBER OR STYLE_DRAGDROP OR STYLE_NOSIZEGRIP) 
     END IF
